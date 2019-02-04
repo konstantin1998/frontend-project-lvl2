@@ -1,0 +1,168 @@
+0 info it worked if it ends with ok
+1 verbose cli [ '/usr/bin/node', '/usr/bin/npm', 'install', '1_proj', '-g' ]
+2 info using npm@3.5.2
+3 info using node@v8.10.0
+4 silly loadCurrentTree Starting
+5 silly install loadCurrentTree
+6 silly install readGlobalPackageData
+7 silly fetchPackageMetaData 1_proj
+8 silly fetchNamedPackageData 1_proj
+9 silly mapToRegistry name 1_proj
+10 silly mapToRegistry using default registry
+11 silly mapToRegistry registry https://registry.npmjs.org/
+12 silly mapToRegistry uri https://registry.npmjs.org/1_proj
+13 verbose request uri https://registry.npmjs.org/1_proj
+14 verbose request no auth needed
+15 info attempt registry request try #1 at 19:56:35
+16 verbose request using bearer token for auth
+17 verbose request id 9fded8935222dcad
+18 verbose etag W/"738bd6038743de78b78de2c0f1a44e53"
+19 verbose lastModified Mon, 04 Feb 2019 16:50:20 GMT
+20 http request GET https://registry.npmjs.org/1_proj
+21 http 304 https://registry.npmjs.org/1_proj
+22 verbose headers { date: 'Mon, 04 Feb 2019 16:56:35 GMT',
+22 verbose headers   connection: 'keep-alive',
+22 verbose headers   'set-cookie':
+22 verbose headers    [ '__cfduid=d5b4b562719f7c612ecda009ede7adf001549299395; expires=Tue, 04-Feb-20 16:56:35 GMT; path=/; domain=.registry.npmjs.org; HttpOnly' ],
+22 verbose headers   'cf-cache-status': 'HIT',
+22 verbose headers   'cache-control': 'max-age=300',
+22 verbose headers   'cf-ray': '4a3eabe80dc78f45-DME',
+22 verbose headers   etag: '"738bd6038743de78b78de2c0f1a44e53"',
+22 verbose headers   'expect-ct': 'max-age=604800, report-uri="https://report-uri.cloudflare.com/cdn-cgi/beacon/expect-ct"',
+22 verbose headers   'last-modified': 'Mon, 04 Feb 2019 16:50:20 GMT',
+22 verbose headers   vary: 'accept-encoding, accept',
+22 verbose headers   'x-amz-meta-rev': '1-a143e910e8f500cadaef1b86020a1455',
+22 verbose headers   server: 'cloudflare' }
+23 silly get cb [ 304,
+23 silly get   { date: 'Mon, 04 Feb 2019 16:56:35 GMT',
+23 silly get     connection: 'keep-alive',
+23 silly get     'set-cookie':
+23 silly get      [ '__cfduid=d5b4b562719f7c612ecda009ede7adf001549299395; expires=Tue, 04-Feb-20 16:56:35 GMT; path=/; domain=.registry.npmjs.org; HttpOnly' ],
+23 silly get     'cf-cache-status': 'HIT',
+23 silly get     'cache-control': 'max-age=300',
+23 silly get     'cf-ray': '4a3eabe80dc78f45-DME',
+23 silly get     etag: '"738bd6038743de78b78de2c0f1a44e53"',
+23 silly get     'expect-ct': 'max-age=604800, report-uri="https://report-uri.cloudflare.com/cdn-cgi/beacon/expect-ct"',
+23 silly get     'last-modified': 'Mon, 04 Feb 2019 16:50:20 GMT',
+23 silly get     vary: 'accept-encoding, accept',
+23 silly get     'x-amz-meta-rev': '1-a143e910e8f500cadaef1b86020a1455',
+23 silly get     server: 'cloudflare' } ]
+24 verbose etag https://registry.npmjs.org/1_proj from cache
+25 verbose get saving 1_proj to /home/konstantin/.npm/registry.npmjs.org/1_proj/.cache.json
+26 silly install normalizeTree
+27 silly loadCurrentTree Finishing
+28 silly loadIdealTree Starting
+29 silly install loadIdealTree
+30 silly cloneCurrentTree Starting
+31 silly install cloneCurrentTreeToIdealTree
+32 silly cloneCurrentTree Finishing
+33 silly loadShrinkwrap Starting
+34 silly install loadShrinkwrap
+35 silly loadShrinkwrap Finishing
+36 silly loadAllDepsIntoIdealTree Starting
+37 silly install loadAllDepsIntoIdealTree
+38 silly resolveWithNewModule 1_proj@1.0.0 checking installable status
+39 silly cache add args [ '1_proj', null ]
+40 verbose cache add spec 1_proj
+41 silly cache add parsed spec Result {
+41 silly cache add   raw: '1_proj',
+41 silly cache add   scope: null,
+41 silly cache add   name: '1_proj',
+41 silly cache add   rawSpec: '',
+41 silly cache add   spec: 'latest',
+41 silly cache add   type: 'tag' }
+42 silly addNamed 1_proj@latest
+43 verbose addNamed "latest" is being treated as a dist-tag for 1_proj
+44 info addNameTag [ '1_proj', 'latest' ]
+45 silly mapToRegistry name 1_proj
+46 silly mapToRegistry using default registry
+47 silly mapToRegistry registry https://registry.npmjs.org/
+48 silly mapToRegistry uri https://registry.npmjs.org/1_proj
+49 verbose addNameTag registry:https://registry.npmjs.org/1_proj not in flight; fetching
+50 verbose get https://registry.npmjs.org/1_proj not expired, no request
+51 silly addNameTag next cb for 1_proj with tag latest
+52 silly addNamed 1_proj@1.0.0
+53 verbose addNamed "1.0.0" is a plain semver version for 1_proj
+54 silly cache afterAdd 1_proj@1.0.0
+55 verbose afterAdd /home/konstantin/.npm/1_proj/1.0.0/package/package.json not in flight; writing
+56 verbose afterAdd /home/konstantin/.npm/1_proj/1.0.0/package/package.json written
+57 silly loadAllDepsIntoIdealTree Finishing
+58 silly idealTree:prePrune lib
+58 silly idealTree:prePrune └── 1_proj@1.0.0
+59 silly loadIdealTree Finishing
+60 silly currentTree lib
+61 silly idealTree lib
+61 silly idealTree └── 1_proj@1.0.0
+62 silly generateActionsToTake Starting
+63 silly install generateActionsToTake
+64 silly generateActionsToTake Finishing
+65 silly diffTrees action count 1
+66 silly diffTrees add 1_proj@1.0.0
+67 silly decomposeActions action count 8
+68 silly decomposeActions fetch 1_proj@1.0.0
+69 silly decomposeActions extract 1_proj@1.0.0
+70 silly decomposeActions test 1_proj@1.0.0
+71 silly decomposeActions preinstall 1_proj@1.0.0
+72 silly decomposeActions build 1_proj@1.0.0
+73 silly decomposeActions install 1_proj@1.0.0
+74 silly decomposeActions postinstall 1_proj@1.0.0
+75 silly decomposeActions finalize 1_proj@1.0.0
+76 silly executeActions Starting
+77 silly install executeActions
+78 silly doSerial global-install 0
+79 silly doParallel fetch 1
+80 verbose lock using /home/konstantin/.npm/_locks/staging-3a08f0df5026584d.lock for /usr/local/lib/node_modules/.staging
+81 silly doParallel extract 1
+82 silly extract 1_proj@1.0.0
+83 verbose unbuild lib/node_modules/.staging/1_proj-1f242d2d
+84 silly gentlyRm /usr/local/lib/node_modules/.staging/1_proj-1f242d2d is being purged from base /usr/local
+85 verbose gentlyRm don't care about contents; nuking /usr/local/lib/node_modules/.staging/1_proj-1f242d2d
+86 verbose tar unpack /home/konstantin/.npm/1_proj/1.0.0/package.tgz
+87 verbose tar unpacking to /usr/local/lib/node_modules/.staging/1_proj-1f242d2d
+88 silly gentlyRm /usr/local/lib/node_modules/.staging/1_proj-1f242d2d is being purged
+89 verbose gentlyRm don't care about contents; nuking /usr/local/lib/node_modules/.staging/1_proj-1f242d2d
+90 silly gunzTarPerm modes [ '755', '644' ]
+91 silly gunzTarPerm extractEntry package.json
+92 silly gentlyRm /usr/local/lib/node_modules/.staging/1_proj-1f242d2d/node_modules is being purged
+93 verbose gentlyRm don't care about contents; nuking /usr/local/lib/node_modules/.staging/1_proj-1f242d2d/node_modules
+94 silly doParallel preinstall 1
+95 silly preinstall 1_proj@1.0.0 /usr/local/lib/node_modules/.staging/1_proj-1f242d2d
+96 info lifecycle 1_proj@1.0.0~preinstall: 1_proj@1.0.0
+97 silly lifecycle 1_proj@1.0.0~preinstall: no script for preinstall, continuing
+98 silly doReverseSerial remove 0
+99 silly doSerial move 0
+100 silly doSerial finalize 1
+101 silly finalize /usr/local/lib/node_modules/1_proj
+102 silly doSerial build 1
+103 silly build 1_proj@1.0.0
+104 info linkStuff 1_proj@1.0.0
+105 silly linkStuff 1_proj@1.0.0 has /usr/local/lib/node_modules as its parent node_modules
+106 silly linkStuff 1_proj@1.0.0 is part of a global install
+107 silly linkStuff 1_proj@1.0.0 is installed into a global node_modules
+108 silly linkStuff 1_proj@1.0.0 is installed into the top-level global node_modules
+109 verbose linkBins 1_proj@1.0.0
+110 verbose link bins [ { 'brain-games': 'dist/bin/brain-games.js' },
+110 verbose link bins   '/usr/local/bin',
+110 verbose link bins   true ]
+111 verbose linkMans 1_proj@1.0.0
+112 verbose unlock done using /home/konstantin/.npm/_locks/staging-3a08f0df5026584d.lock for /usr/local/lib/node_modules/.staging
+113 silly rollbackFailedOptional Starting
+114 silly rollbackFailedOptional Finishing
+115 silly runTopLevelLifecycles Starting
+116 silly runTopLevelLifecycles Finishing
+117 silly install printInstalled
+118 verbose stack Error: ENOENT: no such file or directory, chmod '/usr/local/lib/node_modules/1_proj/dist/bin/brain-games.js'
+119 verbose cwd /home/konstantin/js_project
+120 error Linux 4.15.0-29-generic
+121 error argv "/usr/bin/node" "/usr/bin/npm" "install" "1_proj" "-g"
+122 error node v8.10.0
+123 error npm  v3.5.2
+124 error path /usr/local/lib/node_modules/1_proj/dist/bin/brain-games.js
+125 error code ENOENT
+126 error errno -2
+127 error syscall chmod
+128 error enoent ENOENT: no such file or directory, chmod '/usr/local/lib/node_modules/1_proj/dist/bin/brain-games.js'
+129 error enoent ENOENT: no such file or directory, chmod '/usr/local/lib/node_modules/1_proj/dist/bin/brain-games.js'
+129 error enoent This is most likely not a problem with npm itself
+129 error enoent and is related to npm not being able to find a file.
+130 verbose exit [ -2, true ]
