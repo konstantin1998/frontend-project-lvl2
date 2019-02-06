@@ -1,0 +1,17 @@
+{
+    plugins:
+        - jest
+        
+        
+    env:
+        browser: true
+      
+
+    parser: babel-eslint
+
+    rules:
+        no-console: 0
+
+    extends:
+        - 'airbnb-base'        
+}
