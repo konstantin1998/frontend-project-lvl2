@@ -28,6 +28,7 @@
     "babel-eslint": "^10.0.1",
     "eslint-config-airbnb-base": "^13.1.0",
     "eslint-plugin-import": "^2.16.0",
+    "eslint-scope": "^4.0.0",
     "readline-sync": "1.4.9"
   },
   "keywords": [
