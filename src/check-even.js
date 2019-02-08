@@ -9,31 +9,29 @@ const even = () => {
   console.log(hello);
   console.log('\n');
   let a = 0;
-  while (a < 3) {
-    const b = Math.floor(Math.random() * 100) + 1;
-    const str1 = `Question: ${b}`;
-    console.log(str1);
+  const times = 3;
+  while (a < times) {
+    const num = Math.floor(Math.random() * 100) + 1;
+    const Question = `Question: ${num}`;
+    console.log(Question);
     const answer = readlineSync.question('Your answer: ');
-    if ((b % 2) === 0 && answer === 'yes') {
+    let trueAnswer = ' ';
+    if ((num % 2) === 0) {
+      trueAnswer = 'yes';
+    } else {
+      trueAnswer = 'no';
+    }
+    if (trueAnswer === answer) {
       a += 1;
       console.log('Correct');
-    }
-    if ((b % 2) === 1 && answer === 'no') {
-      a += 1;
-      console.log('Correct');
-    }
-    if ((b % 2) === 0 && answer === 'no') {
-      console.log('no is wrong answer ;(. Correct answer was "yes".)');
+    } else {
+      const message = `${answer} is wrong answer ;(. Correct answer was ${trueAnswer}`;
       const str = `Let's try again,  ${userName}!`;
-      console.log(str);
-    }
-    if ((b % 2) === 1 && answer === 'yes') {
-      console.log('yes is wrong answer ;(. Correct answer was "no".)');
-      const str = `Let's try again,  ${userName}!`;
+      console.log(message);
       console.log(str);
     }
   }
-  const str2 = `Congratulations, ${userName}!`;
-  console.log(str2);
+  const words = `Congratulations, ${userName}!`;
+  console.log(words);
 };
 export default even;

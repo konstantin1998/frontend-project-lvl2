@@ -6,5 +6,4 @@ publish:
 	npm publish
 lint:
 	npx eslint .
-calc: 
-	npx babel-node -- src/bin/brain-calc.js
+
