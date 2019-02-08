@@ -9,16 +9,17 @@ const brainCalc = () => {
   console.log(hello);
   console.log('\n');
   let a = 0;
-  while (a < 3) {
+  const times = 3;
+  while (a < times) {
     const arg1 = Math.floor(Math.random() * 20) + 1;
-    const oper = Math.floor(Math.random() * 3);
+    const num = Math.floor(Math.random() * 3);
     const arg2 = Math.floor(Math.random() * 20) + 1;
     let result = 0;
     let operation = ' ';
-    if (oper === 0) {
+    if (num === 0) {
       result = arg1 + arg2;
       operation = '+';
-    } else if (oper === 1) {
+    } else if (num === 1) {
       result = arg1 * arg2;
       operation = '*';
     } else {
@@ -26,8 +27,8 @@ const brainCalc = () => {
       operation = '-';
     }
     const corrAnswer = String(result);
-    const str1 = `Question: ${arg1} ${operation} ${arg2}`;
-    console.log(str1);
+    const Question = `Question: ${arg1} ${operation} ${arg2}`;
+    console.log(Question);
     const answer = readlineSync.question('Your answer: ');
     if (answer === corrAnswer) {
       a += 1;
@@ -38,7 +39,7 @@ const brainCalc = () => {
       console.log(str);
     }
   }
-  const str2 = `Congratulations, ${userName}!`;
-  console.log(str2);
+  const message = `Congratulations, ${userName}!`;
+  console.log(message);
 };
 export default brainCalc;
