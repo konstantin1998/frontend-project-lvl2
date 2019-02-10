@@ -1,5 +1,7 @@
 import readlineSync from 'readline-sync';
 
+const times = 3;
+const isEven = num => (((num % 2) === 0) ? 'yes' : 'no');
 const even = () => {
   console.log('Welcome to the Brain Games!');
   console.log('Answer "yes" if number even otherwise answer "no".');
@@ -8,30 +10,27 @@ const even = () => {
   const hello = `Hello,  ${userName}!`;
   console.log(hello);
   console.log('\n');
-  let a = 0;
-  const times = 3;
-  while (a < times) {
-    const num = Math.floor(Math.random() * 100) + 1;
-    const Question = `Question: ${num}`;
-    console.log(Question);
+  let success = true;
+  for (let i = 0; i < times; i += 1) {
+    const randomNum = Math.floor(Math.random() * 100) + 1;
+    console.log(`Question: ${randomNum}`);
     const answer = readlineSync.question('Your answer: ');
-    let trueAnswer = ' ';
-    if ((num % 2) === 0) {
-      trueAnswer = 'yes';
-    } else {
-      trueAnswer = 'no';
-    }
+    const trueAnswer = isEven(randomNum);
     if (trueAnswer === answer) {
-      a += 1;
       console.log('Correct');
     } else {
+      success = false;
       const message = `${answer} is wrong answer ;(. Correct answer was ${trueAnswer}`;
       const str = `Let's try again,  ${userName}!`;
       console.log(message);
       console.log(str);
+      break;
     }
   }
-  const words = `Congratulations, ${userName}!`;
-  console.log(words);
+  if (success) {
+    const words = `Congratulations, ${userName}!`;
+    console.log(words);
+  }
 };
+
 export default even;
