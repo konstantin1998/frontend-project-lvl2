@@ -1,5 +1,5 @@
 #!/usr/bin/env node
 
-import even from '../check-even';
+import even from '../games/even-game/check-even.js';
 
 even();
