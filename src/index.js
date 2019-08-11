@@ -1,8 +1,15 @@
-import readlineSync from 'readline-sync';
+#!/usr/bin/env node
+//import require from 'commander'
 
-const question = () => {
-  const userName = readlineSync.question('May I have your name? ');
-  const str = `Hello ${userName}!`;
-  console.log(str);
-};
-export default question;
+var program = require('commander');
+
+program
+  .command('rm <dir>')
+  .option('-r, --recursive', 'Remove recursively')
+  .action(function (dir, cmdObj) {
+    console.log('remove ' + dir + (cmdObj.recursive ? ' recursively' : ''))
+  })
+
+program.parse(process.argv);
+
+program();

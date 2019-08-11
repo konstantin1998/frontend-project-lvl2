@@ -1,19 +1,13 @@
 {
-  "name": "1_proj",
-  "version": "1.0.19",
-  "description": "first project",
+  "name": "2_proj",
+  "version": "1.0.0",
+  "description": "second project",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "NODE_ENV=production babel src --out-dir dist --source-maps inline",
     "prepublishOnly": "npm run build"
   },
-  "bin": {
-    "brain-games": "dist/bin/brain-games.js",
-    "hello": "dist/index.js",
-    "brain-even": "dist/bin/brain-even.js",
-    "brain-calc": "dist/bin/brain-calc.js",
-    "brain-gcd": "dist/bin/brain-gcd.js"
-  },
+  "bin": {},
   "author": "me",
   "license": "ISC",
   "files": [
@@ -32,8 +26,7 @@
     "eslint-scope": "^4.0.0"
   },
   "dependencies": {
-    "hexlet-pairs": "^1.0.8",
-    "readline-sync": "1.4.9"
+    "commander": "^3.0.0"
   },
   "keywords": [
     "bar",
