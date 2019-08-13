@@ -5,4 +5,4 @@ publish:
 lint:
 	npx eslint .
 test:
-	npx babel-node -- src/index.js
+	npx babel-node -- src/bin/index.js
