@@ -5,4 +5,4 @@ publish:
 lint:
 	npx eslint .
 test:
-	npx babel-node -- src/bin/index.js
+	sudo ./dist/bin/gendiff.js -h
