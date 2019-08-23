@@ -1,7 +1,7 @@
 const yaml = require('js-yaml');
 
 const parse = (content, extansion) => {
-  let result = { node: 'jest' };
+  const result = {};
 
   if (extansion === '.json') {
     result = JSON.parse(content);
