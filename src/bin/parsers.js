@@ -1,15 +1,15 @@
 const yaml = require('js-yaml');
 
 const parse = (content, extansion) => {
-  const result = {};
+  const resultContainer = { result: {} };
 
   if (extansion === '.json') {
-    result = JSON.parse(content);
+    resultContainer.result = JSON.parse(content);
   }
   if (extansion === '.yml') {
-    result = yaml.safeLoad(content);
+    resultContainer.result = yaml.safeLoad(content);
   }
-  return result;
+  return resultContainer.result;
 };
 
 export default parse;
