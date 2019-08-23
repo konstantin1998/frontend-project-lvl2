@@ -1,0 +1,7 @@
+
+---
+
+plugins: 'node1'
+babel: 'nodejs'
+test1: 'jest1'
+

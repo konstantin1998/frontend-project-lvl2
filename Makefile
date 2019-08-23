@@ -5,4 +5,4 @@ publish:
 lint:
 	npx eslint .
 test:
-	sudo ./dist/bin/gendiff.js /home/konstantin/js_project/testdir/jsonBefore /home/konstantin/js_project/testdir/jsonAfter
+	sudo ./dist/bin/gendiff.js ./__tests__/__fixtures__/before.yml ./__tests__/__fixtures__/after.yml

@@ -1,0 +1,9 @@
+{
+  -plugins:node;
+  +plugins:node1;
+  babel:nodejs;
+  -test:jest;
+  +test1:jest1;
+}
+
+

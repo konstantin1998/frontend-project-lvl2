@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-import comparator from './jsonCompare';
+import comparator from './compare';
 
 const program = require('commander');
 
