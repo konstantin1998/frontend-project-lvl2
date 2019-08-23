@@ -1,6 +1,7 @@
 import comparator from '../src/bin/compare';
 
 const fs = require('fs');
+
 const dirName = __dirname;
 
 test('jsonCompare', () => {
@@ -22,4 +23,3 @@ test('yamlCompare', () => {
 
   expect(actual).toEqual(right);
 });
-
