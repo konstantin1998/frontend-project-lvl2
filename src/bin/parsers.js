@@ -1,4 +1,5 @@
 const yaml = require('js-yaml');
+const ini = require('ini');
 
 const parse = (content, extansion) => {
   const resultContainer = { result: {} };
@@ -8,6 +9,9 @@ const parse = (content, extansion) => {
   }
   if (extansion === '.yml') {
     resultContainer.result = yaml.safeLoad(content);
+  }
+  if (extansion === '.ini') {
+    resultContainer.result = ini.parse(content);
   }
   return resultContainer.result;
 };
