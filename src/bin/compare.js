@@ -1,24 +1,58 @@
 import parse from './parsers';
+import objToString from './render';
 
 const fs = require('fs');
 const _ = require('lodash');
 const path = require('path');
 
+const isObj = (arg) => {
+  if (typeof (arg) === 'string') {
+    return false;
+  }
+
+  if (Array.isArray(arg) === true) {
+    return false;
+  }
+
+  if (typeof (arg) === 'object') {
+    return true;
+  }
+
+  return false;
+};
+
 const differenceItem = (objBefore, objAfter, key) => {
   if (_.has(objBefore, key) && _.has(objAfter, key)) {
     if (objBefore[key] === objAfter[key]) {
-      const diff = `  ${key}:${objAfter[key]};`;
+      const diff = {};
+      diff[`  ${key}`] = objBefore[key];
       return diff;
     }
-    const diff = [`  -${key}:${objBefore[key]};`, `  +${key}:${objAfter[key]};`].join('\n');
+
+    const diff = {};
+    diff[`- ${key}`] = objBefore[key];
+    diff[`+ ${key}`] = objAfter[key];
     return diff;
   }
+
   if (_.has(objBefore, key)) {
-    const diff = `  -${key}:${objBefore[key]};`;
+    const diff = {};
+    diff[`- ${key}`] = objBefore[key];
     return diff;
   }
-  const diff = `  +${key}:${objAfter[key]};`;
+
+  const diff = {};
+  diff[`+ ${key}`] = objAfter[key];
   return diff;
+};
+
+const isPlainKey = (obj1, obj2, key) => {
+  if (_.has(obj1, key) && _.has(obj2, key)) {
+    if (isObj(obj1[key]) && isObj(obj2[key])) {
+      return false;
+    }
+  }
+  return true;
 };
 
 const comparator = (fileBeforePath, fileAfterPath) => {
@@ -31,15 +65,26 @@ const comparator = (fileBeforePath, fileAfterPath) => {
 
   const fileBeforeContent = fs.readFileSync(fileBeforePath).toString();
   const fileAfterContent = fs.readFileSync(fileAfterPath).toString();
-  const ObjBefore = parse(fileBeforeContent, fileBeforeExt);
-  const ObjAfter = parse(fileAfterContent, fileAfterExt);
+  const objBefore = parse(fileBeforeContent, fileBeforeExt);
+  const objAfter = parse(fileAfterContent, fileAfterExt);
 
-  const allKeys = _.concat(Object.keys(ObjBefore), Object.keys(ObjAfter));
-  const keys = _.uniq(allKeys);
-  const difference = key => differenceItem(ObjBefore, ObjAfter, key);
-  const diff = keys.map(difference).join('\n');
+  const formDiff = (before, after) => {
+    const allKeys = _.concat(Object.keys(before), Object.keys(after));
+    const keys = _.uniq(allKeys);
 
-  return ['{', diff, '}'].join('\n');
+    const resultObj = keys.reduce((acc, key) => {
+      if (isPlainKey(before, after, key)) {
+        return { ...acc, ...differenceItem(before, after, key) };
+      }
+      acc[key] = formDiff(before[key], after[key]);
+      return acc;
+    }, {});
+
+    return resultObj;
+  };
+
+  const diffObj = formDiff(objBefore, objAfter);
+  return objToString(diffObj);
 };
 
 export default comparator;
