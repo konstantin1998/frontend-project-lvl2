@@ -17,7 +17,7 @@ const isObj = (arg) => {
   return false;
 };
 
-const objToString = (object) => {
+const render = (object) => {
   const createGap = (key) => {
     const keyString = `${key}`;
     if ((keyString[0] === '+') || (keyString[0] === '-')) {
@@ -45,5 +45,5 @@ const objToString = (object) => {
   return _.join(_.concat('{', objToLines(object), '}'), '\n');
 };
 
-export default objToString;
+export default render;
 // console.log(objToString(testObj));

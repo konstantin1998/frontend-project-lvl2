@@ -1,5 +1,5 @@
 import parse from './parsers';
-import objToString from './render';
+import render from './render';
 
 const fs = require('fs');
 const _ = require('lodash');
@@ -84,7 +84,7 @@ const comparator = (fileBeforePath, fileAfterPath) => {
   };
 
   const diffObj = formDiff(objBefore, objAfter);
-  return objToString(diffObj);
+  return render(diffObj);
 };
 
 export default comparator;
