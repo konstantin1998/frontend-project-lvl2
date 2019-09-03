@@ -1,9 +1,22 @@
 {
-  -plugins:node;
-  +plugins:node1;
-  babel:nodejs;
-  -test:jest;
-  +test1:jest1;
+  - key1: value1
+  + key1: value2
+  - key2: will change
+  + key2: changed
+    key3: the same
+    key4: {
+      - key1: true
+      + key1: false
+      - key2: will be different
+      + key2: different
+      - key3: will be deleted
+    }
+    key5: {
+        key1: {
+          - key2: true
+          + key2: false
+        }
+    }
 }
 
 

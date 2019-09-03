@@ -1,9 +1,15 @@
 {
-  host:hexlet.io;
-  -timeout:50;
-  +timeout:20;
-  -proxy:123.234.53.22;
-  -follow:false;
-  +verbose:true;
+    first: {
+      - key1: value1
+      - key2: before
+      + key2: after
+        key3: the same
+        second: {
+          - key1: will be changed
+          + key1: changed
+          - key3: will be deleted
+          + key2: true
+        }
+    }
 }
 

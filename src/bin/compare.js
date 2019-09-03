@@ -76,7 +76,7 @@ const comparator = (fileBeforePath, fileAfterPath) => {
       if (isPlainKey(before, after, key)) {
         return { ...acc, ...differenceItem(before, after, key) };
       }
-      acc[key] = formDiff(before[key], after[key]);
+      acc[`  ${key}`] = formDiff(before[key], after[key]);
       return acc;
     }, {});
 
