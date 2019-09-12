@@ -1,4 +1,4 @@
-import parse from './parsers';
+import parse from '../parsers';
 import render from './render';
 
 const fs = require('fs');

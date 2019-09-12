@@ -1,0 +1,11 @@
+---
+key1: value1
+key2: will change
+key3: the same
+key4:
+  key1: true
+  key2: will be different
+  key3: will be deleted
+key5:
+  key1:
+    key2: true

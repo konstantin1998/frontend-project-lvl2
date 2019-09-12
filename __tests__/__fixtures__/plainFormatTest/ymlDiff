@@ -1,0 +1,6 @@
+Property 'key1' was updated. From 'value1' to 'value2'
+Property 'key2' was updated. From 'will change' to 'changed'
+Property 'key4.key1' was updated. From true to false
+Property 'key4.key2' was updated. From 'will be different' to 'different'
+Property 'key4.key3' was removed
+Property 'key5.key1.key2' was updated. From true to false

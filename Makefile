@@ -5,4 +5,4 @@ publish:
 lint:
 	npx eslint .
 test:
-	sudo ./dist/bin/index.js
+	sudo ./dist/bin/gendiff.js ./testdir/before.ini ./testdir/after.ini -f plain
