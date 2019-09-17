@@ -2,6 +2,7 @@
 
 import objFormatCompare from './formatters/objectFormat/compare';
 import plainFormatCompare from './formatters/plainFormat/diffGenerator';
+import jsonFormatCompare from './formatters/jsonFormat/diffGenerator';
 
 const program = require('commander');
 
@@ -11,14 +12,15 @@ program.arguments('<firstConfig> <secondConfig>').action((firstConfig, secondCon
   args.push(firstConfig);
   args.push(secondConfig);
 });
-/* action((firstConfig, secondConfig) => {
-    diffObj.difference = comparator(firstConfig, secondConfig); }); */
 program.option('-f, --format [type]', 'Output format', 'obj');
 program.parse(process.argv);
 
 const [firstConfig, secondConfig] = args;
 if (program.format === 'plain') {
   console.log(plainFormatCompare(firstConfig, secondConfig));
+}
+if (program.format === 'json') {
+  console.log(jsonFormatCompare(firstConfig, secondConfig));
 } else {
   console.log(objFormatCompare(firstConfig, secondConfig));
 }
