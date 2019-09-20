@@ -1,6 +1,0 @@
-Property 'first.key1' was removed
-Property 'first.key2' was updated. From 'before' to 'after'
-Property 'first.second.key1' was updated. From 'will be changed' to 'changed'
-Property 'first.second.key3' was removed
-Property 'first.second.key2' was added with value: true
-

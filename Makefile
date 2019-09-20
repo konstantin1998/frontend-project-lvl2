@@ -5,4 +5,4 @@ publish:
 lint:
 	npx eslint .
 test:
-	sudo ./dist/bin/index.js 
+	npx jest 

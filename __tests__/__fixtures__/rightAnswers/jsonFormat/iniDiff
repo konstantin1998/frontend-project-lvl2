@@ -1,1 +1,0 @@
-{"first":{"key1":{"prevVal":"value1","lastNested":true},"key2":{"prevVal":"before","newVal":"after","lastNested":true},"key3":{"prevVal":"the same","newVal":"the same","lastNested":true},"second":{"key1":{"prevVal":"will be changed","newVal":"changed","lastNested":true},"key3":{"prevVal":"will be deleted","lastNested":true},"key2":{"newVal":true,"lastNested":true}}}}

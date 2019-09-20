@@ -1,28 +1,15 @@
 {
-  "common": {
-    "follow": false,
-    "setting1": "Value 1",
-    "setting3": {
-      "key": "value"
-    },
-    "setting4": "blah blah",
-    "setting5": {
-      "key5": "value5"
-    },
-    "setting6": {
-      "key": "value",
-      "ops": "vops"
+  "key1": "value2",
+  "key2": "changed",
+  "key3": "the same",
+  "key4": {
+    "key1": false,
+    "key2": "different"
+  },
+  "key5": {
+    "key1": {
+      "key2": false
     }
-  },
-
-  "group1": {
-    "foo": "bar",
-    "baz": "bars",
-    "nest": "str"
-  },
-
-  "group3": {
-    "fee": "100500"
   }
 }
 
