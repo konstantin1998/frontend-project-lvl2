@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-import objFormatCompare from './formatters/objectFormat/compare';
+import objFormatCompare from './formatters/objectFormat/diffGenerator';
 import plainFormatCompare from './formatters/plainFormat/diffGenerator';
 import jsonFormatCompare from './formatters/jsonFormat/diffGenerator';
 
