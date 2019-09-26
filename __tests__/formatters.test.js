@@ -1,9 +1,7 @@
-import getPlainDiff from '../src/bin/formatters/plainFormat/diffGenerator';
-import getObjDiff from '../src/bin/formatters/objectFormat/diffGenerator';
-import getJsonDiff from '../src/bin/formatters/jsonFormat/diffGenerator';
+import _ from 'lodash';
+import fs from 'fs';
 
-const _ = require('lodash');
-const fs = require('fs');
+import compare from '../src/bin/compare';
 
 const testExamples = [
   `${__dirname}/__fixtures__/testExamples/before.ini`,
@@ -17,17 +15,19 @@ const chunkSize = 2;
 const arraysForTest = _.chunk(testExamples, chunkSize);
 
 test.each(arraysForTest)('objFormatTest', (fileBeforePath, fileAfterPath) => {
+  const format = 'obj';
   const rightAnswerPath = `${__dirname}/__fixtures__/rightAnswers/objFormat`;
   const right = fs.readFileSync(rightAnswerPath).toString().trim();
-  const actual = getObjDiff(fileBeforePath, fileAfterPath).trim();
+  const actual = compare(fileBeforePath, fileAfterPath, format).trim();
 
   expect(actual).toEqual(right);
 });
 
 test.each(arraysForTest)('plainFormatTest', (fileBeforePath, fileAfterPath) => {
+  const format = 'plain';
   const rightAnswerPath = `${__dirname}/__fixtures__/rightAnswers/plainFormat`;
   const expected = fs.readFileSync(rightAnswerPath).toString().trim().split('\n');
-  const actual = getPlainDiff(fileBeforePath, fileAfterPath).trim().split('\n');
+  const actual = compare(fileBeforePath, fileAfterPath, format).trim().split('\n');
   const expectedToLines = expected.sort();
   const actualToLines = actual.sort();
 
@@ -35,9 +35,10 @@ test.each(arraysForTest)('plainFormatTest', (fileBeforePath, fileAfterPath) => {
 });
 
 test.each(arraysForTest)('jsonFormatTest', (fileBeforePath, fileAfterPath) => {
+  const format = 'json';
   const rightAnswerPath = `${__dirname}/__fixtures__/rightAnswers/jsonFormat`;
   const expected = JSON.parse(fs.readFileSync(rightAnswerPath).toString().trim());
-  const actual = JSON.parse(getJsonDiff(fileBeforePath, fileAfterPath));
+  const actual = JSON.parse(compare(fileBeforePath, fileAfterPath, format));
 
   expect(actual).toEqual(expected);
 });
