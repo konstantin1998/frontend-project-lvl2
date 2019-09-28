@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import fs from 'fs';
 
-import compare from '../src/bin/compare';
+import compare from '../src';
 
 const testExamples = [
   `${__dirname}/__fixtures__/testExamples/before.ini`,
@@ -26,12 +26,13 @@ test.each(arraysForTest)('objFormatTest', (fileBeforePath, fileAfterPath) => {
 test.each(arraysForTest)('plainFormatTest', (fileBeforePath, fileAfterPath) => {
   const format = 'plain';
   const rightAnswerPath = `${__dirname}/__fixtures__/rightAnswers/plainFormat`;
-  const expected = fs.readFileSync(rightAnswerPath).toString().trim().split('\n');
-  const actual = compare(fileBeforePath, fileAfterPath, format).trim().split('\n');
-  const expectedToLines = expected.sort();
-  const actualToLines = actual.sort();
+  const expected = fs.readFileSync(rightAnswerPath).toString().trim().split('\n')
+    .sort()
+    .join('\n');
+  const actual = compare(fileBeforePath, fileAfterPath, format).trim().split('\n').sort()
+    .join('\n');
 
-  expect(actualToLines).toEqual(expectedToLines);
+  expect(actual).toEqual(expected);
 });
 
 test.each(arraysForTest)('jsonFormatTest', (fileBeforePath, fileAfterPath) => {

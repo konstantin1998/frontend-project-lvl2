@@ -1,9 +1,8 @@
-import parse from '../parsers';
-// import render from './render';
+import fs from 'fs';
+import _ from 'lodash';
+import path from 'path';
 
-const fs = require('fs');
-const _ = require('lodash');
-const path = require('path');
+import parse from '../parsers';
 
 const isObj = (arg) => {
   if (typeof (arg) === 'string') {

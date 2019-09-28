@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-const _ = require('lodash');
+import _ from 'lodash';
 
 const isObj = (arg) => {
   if (typeof (arg) === 'string') {

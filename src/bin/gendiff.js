@@ -2,7 +2,7 @@
 
 import program from 'commander';
 
-import compare from './compare';
+import compare from '..';
 
 const args = [];
 program
@@ -17,4 +17,6 @@ program
   .parse(process.argv);
 
 const [firstConfig, secondConfig] = args;
-console.log(compare(firstConfig, secondConfig, program.format));
+if ((firstConfig !== undefined) && (secondConfig !== undefined)) {
+  console.log(compare(firstConfig, secondConfig, program.format));
+}

@@ -1,9 +1,9 @@
-import parse from '../parsers';
-import render from './render';
+import fs from 'fs';
+import _ from 'lodash';
+import path from 'path';
 
-const fs = require('fs');
-const _ = require('lodash');
-const path = require('path');
+import parse from '../parsers';
+import render from '../renders/objRender';
 
 const isObj = (arg) => {
   if (typeof (arg) === 'string') {
@@ -22,13 +22,28 @@ const isObj = (arg) => {
 };
 
 const differenceItem = (objBefore, objAfter, key) => {
+  if (_.has(objBefore, key) && _.has(objAfter, key)) {
+    if (objBefore[key] === objAfter[key]) {
+      const diff = {};
+      diff[`  ${key}`] = objBefore[key];
+      return diff;
+    }
+
+    const diff = {};
+    diff[`- ${key}`] = objBefore[key];
+    diff[`+ ${key}`] = objAfter[key];
+    return diff;
+  }
+
+  if (_.has(objBefore, key)) {
+    const diff = {};
+    diff[`- ${key}`] = objBefore[key];
+    return diff;
+  }
+
   const diff = {};
-  diff.prevVal = objBefore[key];
-  diff.newVal = objAfter[key];
-  diff.lastNested = true;
-  const resultObj = {};
-  resultObj[`${key}`] = diff;
-  return resultObj;
+  diff[`+ ${key}`] = objAfter[key];
+  return diff;
 };
 
 const isPlainKey = (obj1, obj2, key) => {
@@ -40,7 +55,7 @@ const isPlainKey = (obj1, obj2, key) => {
   return true;
 };
 
-const diffGanerator = (fileBeforePath, fileAfterPath) => {
+const comparator = (fileBeforePath, fileAfterPath) => {
   const fileBeforeExt = path.extname(path.basename(fileBeforePath));
   const fileAfterExt = path.extname(path.basename(fileAfterPath));
 
@@ -61,7 +76,7 @@ const diffGanerator = (fileBeforePath, fileAfterPath) => {
       if (isPlainKey(before, after, key)) {
         return { ...acc, ...differenceItem(before, after, key) };
       }
-      acc[key] = formDiff(before[key], after[key]);
+      acc[`  ${key}`] = formDiff(before[key], after[key]);
       return acc;
     }, {});
 
@@ -72,4 +87,4 @@ const diffGanerator = (fileBeforePath, fileAfterPath) => {
   return render(diffObj);
 };
 
-export default diffGanerator;
+export default comparator;
