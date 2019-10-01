@@ -55,7 +55,7 @@ const diffGanerator = (fileBeforePath, fileAfterPath) => {
 
   const formDiff = (before, after) => {
     const allKeys = _.concat(Object.keys(before), Object.keys(after));
-    const keys = _.uniq(allKeys);
+    const keys = _.uniq(allKeys.sort());
 
     const resultObj = keys.reduce((acc, key) => {
       if (isPlainKey(before, after, key)) {
