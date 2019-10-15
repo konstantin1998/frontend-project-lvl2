@@ -1,9 +1,6 @@
-import fs from 'fs';
 import _ from 'lodash';
-import path from 'path';
 
-import parse from '../parsers';
-import render from '../renders/plainRender';
+import getDifference from './getDifference';
 
 const isObj = (arg) => {
   if (typeof (arg) === 'string') {
@@ -21,55 +18,59 @@ const isObj = (arg) => {
   return false;
 };
 
-const differenceItem = (objBefore, objAfter, key) => {
-  const diff = {};
-  diff.prevVal = objBefore[key];
-  diff.newVal = objAfter[key];
-  diff.lastNested = true;
-  const resultObj = {};
-  resultObj[`${key}`] = diff;
-  return resultObj;
+const getPropPath = (key, propPath) => {
+  if (propPath === '') {
+    return `${key}`;
+  }
+  return `${propPath}.${key}`;
 };
 
-const isPlainKey = (obj1, obj2, key) => {
-  if (_.has(obj1, key) && _.has(obj2, key)) {
-    if (isObj(obj1[key]) && isObj(obj2[key])) {
-      return false;
-    }
+const getFormattedValue = (arg) => {
+  if (isObj(arg)) {
+    return '[complex value]';
   }
-  return true;
+  if (typeof arg === 'string') {
+    return `'${arg}'`;
+  }
+  return arg;
 };
 
-const diffGanerator = (fileBeforePath, fileAfterPath) => {
-  const fileBeforeExt = path.extname(path.basename(fileBeforePath));
-  const fileAfterExt = path.extname(path.basename(fileAfterPath));
+const diffGenerator = (fileBeforePath, fileAfterPath) => {
+  const difference = getDifference(fileBeforePath, fileAfterPath);
+  const objToLines = (obj, propPath = '') => {
+    const keys = Object.getOwnPropertyNames(obj);
 
-  if (fileBeforeExt !== fileAfterExt) {
-    throw new Error('error: arguments must have the same extansion');
-  }
+    const result = keys.reduce((acc, key) => {
+      const objToAnalyze = obj[key];
 
-  const fileBeforeContent = fs.readFileSync(fileBeforePath).toString();
-  const fileAfterContent = fs.readFileSync(fileAfterPath).toString();
-  const objBefore = parse(fileBeforeContent, fileBeforeExt);
-  const objAfter = parse(fileAfterContent, fileAfterExt);
+      if (objToAnalyze.lastNested) {
+        const propName = getPropPath(key, propPath);
 
-  const formDiff = (before, after) => {
-    const allKeys = _.concat(Object.keys(before), Object.keys(after));
-    const keys = _.uniq(allKeys.sort());
-
-    const resultObj = keys.reduce((acc, key) => {
-      if (isPlainKey(before, after, key)) {
-        return { ...acc, ...differenceItem(before, after, key) };
+        if ((objToAnalyze.prevVal !== undefined) && (objToAnalyze.newVal !== undefined)) {
+          if (_.isEqual(objToAnalyze.prevVal, objToAnalyze.newVal)) {
+            return acc;
+          }
+          const prevValue = getFormattedValue(objToAnalyze.prevVal);
+          const newValue = getFormattedValue(objToAnalyze.newVal);
+          return _.concat(acc, `Property '${propName}' was updated. From ${prevValue} to ${newValue}`);
+        }
+        if (objToAnalyze.prevVal === undefined) {
+          const newValue = getFormattedValue(objToAnalyze.newVal);
+          return _.concat(acc, `Property '${propName}' was added with value: ${newValue}`);
+        }
+        if (objToAnalyze.newVal === undefined) {
+          return _.concat(acc, `Property '${propName}' was removed`);
+        }
       }
-      acc[key] = formDiff(before[key], after[key]);
-      return acc;
-    }, {});
 
-    return resultObj;
+      const updatedPropPath = getPropPath(key, propPath);
+      return _.concat(acc, objToLines(obj[key], updatedPropPath));
+    }, []);
+
+    return result;
   };
 
-  const diffObj = formDiff(objBefore, objAfter);
-  return render(diffObj);
+  return objToLines(difference).join('\n');
 };
 
-export default diffGanerator;
+export default diffGenerator;

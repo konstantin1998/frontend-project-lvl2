@@ -4,19 +4,14 @@ import program from 'commander';
 
 import compare from '..';
 
-const args = [];
 program
   .version('0.0.1')
   .description('Compares two configuration files and shows a difference.')
   .arguments('<firstConfig> <secondConfig>')
-  .action((firstConfig, secondConfig) => {
-    args.push(firstConfig);
-    args.push(secondConfig);
-  })
   .option('-f, --format [type]', 'Output format', 'obj')
+  .action((firstConfig, secondConfig) => {
+    if ((firstConfig !== undefined) && (secondConfig !== undefined)) {
+      console.log(compare(firstConfig, secondConfig, program.format));
+    }
+  })
   .parse(process.argv);
-
-const [firstConfig, secondConfig] = args;
-if ((firstConfig !== undefined) && (secondConfig !== undefined)) {
-  console.log(compare(firstConfig, secondConfig, program.format));
-}
