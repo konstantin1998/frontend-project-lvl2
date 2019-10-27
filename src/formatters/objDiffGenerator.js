@@ -1,7 +1,5 @@
 import _ from 'lodash';
 
-import getDifference from './getDifference';
-
 const isObj = (arg) => {
   if (typeof (arg) === 'string') {
     return false;
@@ -18,7 +16,7 @@ const isObj = (arg) => {
   return false;
 };
 
-const diffToString = (object) => {
+const objToString = (object) => {
   const createGap = (key) => {
     const keyString = `${key}`;
     if ((keyString[0] === '+') || (keyString[0] === '-')) {
@@ -72,9 +70,7 @@ const differenceItem = (plainObj, key) => {
 
 const isPlainObj = obj => obj.lastNested;
 
-const diffGenerator = (fileBeforePath, fileAfterPath) => {
-  const difference = getDifference(fileBeforePath, fileAfterPath);
-
+const diffGenerator = (fileDifference) => {
   const correctObjKeys = (diff) => {
     const keys = Object.keys(diff);
 
@@ -88,8 +84,9 @@ const diffGenerator = (fileBeforePath, fileAfterPath) => {
     }, {});
     return result;
   };
-  const diffObj = correctObjKeys(difference);
-  return diffToString(diffObj);
+
+  const diffObj = correctObjKeys(fileDifference);
+  return objToString(diffObj);
 };
 
 export default diffGenerator;

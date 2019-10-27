@@ -1,7 +1,5 @@
 import _ from 'lodash';
 
-import getDifference from './getDifference';
-
 const isObj = (arg) => {
   if (typeof (arg) === 'string') {
     return false;
@@ -35,8 +33,7 @@ const getFormattedValue = (arg) => {
   return arg;
 };
 
-const diffGenerator = (fileBeforePath, fileAfterPath) => {
-  const difference = getDifference(fileBeforePath, fileAfterPath);
+const diffGenerator = (fileDifference) => {
   const objToLines = (obj, propPath = '') => {
     const keys = Object.getOwnPropertyNames(obj);
 
@@ -70,7 +67,7 @@ const diffGenerator = (fileBeforePath, fileAfterPath) => {
     return result;
   };
 
-  return objToLines(difference).join('\n');
+  return objToLines(fileDifference).join('\n');
 };
 
 export default diffGenerator;

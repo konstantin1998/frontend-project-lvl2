@@ -10,8 +10,6 @@ program
   .arguments('<firstConfig> <secondConfig>')
   .option('-f, --format [type]', 'Output format', 'obj')
   .action((firstConfig, secondConfig) => {
-    if ((firstConfig !== undefined) && (secondConfig !== undefined)) {
-      console.log(compare(firstConfig, secondConfig, program.format));
-    }
+    console.log(compare(firstConfig, secondConfig, program.format));
   })
   .parse(process.argv);

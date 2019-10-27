@@ -1,8 +1,3 @@
-import getDifference from './getDifference';
 
-const diffGenerator = (fileBeforePath, fileAfterPath) => {
-  const diffObj = getDifference(fileBeforePath, fileAfterPath);
-  return JSON.stringify(diffObj); // diffObj;
-};
-
+const diffGenerator = fileDifference => JSON.stringify(fileDifference);
 export default diffGenerator;

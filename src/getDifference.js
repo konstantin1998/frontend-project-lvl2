@@ -2,7 +2,7 @@ import fs from 'fs';
 import _ from 'lodash';
 import path from 'path';
 
-import parse from '../parsers';
+import parse from './parsers';
 
 const isObj = (arg) => {
   if (typeof (arg) === 'string') {
@@ -44,6 +44,9 @@ const getDifference = (fileBeforePath, fileAfterPath) => {
   const fileBeforeExt = path.extname(path.basename(fileBeforePath));
   const fileAfterExt = path.extname(path.basename(fileAfterPath));
 
+  if ((fileBeforePath === undefined) || (fileAfterPath === undefined)) {
+    throw new Error('error: one of the file paths is not defined');
+  }
   if (fileBeforeExt !== fileAfterExt) {
     throw new Error('error: arguments must have the same extansion');
   }
