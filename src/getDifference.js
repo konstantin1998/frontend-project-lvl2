@@ -1,6 +1,4 @@
-import fs from 'fs';
 import _ from 'lodash';
-import path from 'path';
 
 import parse from './parsers';
 
@@ -40,21 +38,9 @@ const isPlainKey = (obj1, obj2, key) => {
   return true;
 };
 
-const getDifference = (fileBeforePath, fileAfterPath) => {
-  const fileBeforeExt = path.extname(path.basename(fileBeforePath));
-  const fileAfterExt = path.extname(path.basename(fileAfterPath));
-
-  if ((fileBeforePath === undefined) || (fileAfterPath === undefined)) {
-    throw new Error('error: one of the file paths is not defined');
-  }
-  if (fileBeforeExt !== fileAfterExt) {
-    throw new Error('error: arguments must have the same extansion');
-  }
-
-  const fileBeforeContent = fs.readFileSync(fileBeforePath).toString();
-  const fileAfterContent = fs.readFileSync(fileAfterPath).toString();
-  const objBefore = parse(fileBeforeContent, fileBeforeExt);
-  const objAfter = parse(fileAfterContent, fileAfterExt);
+const getDifference = (fileContentBefore, fileContentAfter, fileType) => {
+  const objBefore = parse(fileContentBefore, fileType);
+  const objAfter = parse(fileContentAfter, fileType);
 
   const formDiff = (before, after) => {
     const allKeys = _.concat(Object.keys(before), Object.keys(after));
@@ -75,16 +61,3 @@ const getDifference = (fileBeforePath, fileAfterPath) => {
 };
 
 export default getDifference;
-/* const formDiff = (diffObj) => {
-    const keys = Object.keys(diffObj);
-
-    const resultObj = keys.reduce((acc, key) => {
-      if (isPlainObj(diffObj.key)) {
-        return { ...acc, ...differenceItem(diffObj.key) };
-      }
-      acc[`  ${key}`] = formDiff(diffObj.key);
-      return acc;
-    }, {});
-
-    return resultObj;
-  }; */
