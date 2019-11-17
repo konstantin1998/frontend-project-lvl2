@@ -8,6 +8,6 @@ const mapping = {
   obj: getObjFormat,
 };
 
-const makeDiff = (fileDifference, format) => mapping[format](fileDifference);
+const renderDiff = (fileDifference, format) => mapping[format](fileDifference);
 
-export default makeDiff;
+export default renderDiff;

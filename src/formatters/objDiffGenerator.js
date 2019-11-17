@@ -1,21 +1,5 @@
 import _ from 'lodash';
 
-const isObj = (arg) => {
-  if (typeof (arg) === 'string') {
-    return false;
-  }
-
-  if (Array.isArray(arg) === true) {
-    return false;
-  }
-
-  if (typeof (arg) === 'object') {
-    return true;
-  }
-
-  return false;
-};
-
 const objToString = (object) => {
   const createGap = (key) => {
     const keyString = `${key}`;
@@ -30,7 +14,7 @@ const objToString = (object) => {
 
     const result = keys.reduce((acc, key) => {
       const insideObjGap = createGap(key);
-      if (isObj(obj[key])) {
+      if (_.isPlainObject(obj[key])) {
         const newGap = `${gap}${insideObjGap}`;
         return _.concat(acc, `${gap}${key}: {`, objToLines(obj[key], newGap), `${gap}  }`);
       }
@@ -43,39 +27,24 @@ const objToString = (object) => {
   return _.join(_.concat('{', objToLines(object), '}'), '\n');
 };
 
-const differenceItem = (plainObj, key) => {
-  if ((plainObj.prevVal !== undefined) && (plainObj.newVal !== undefined)) {
-    if (plainObj.prevVal === plainObj.newVal) {
-      const diff = {};
-      diff[`  ${key}`] = plainObj.newVal;
-      return diff;
-    }
-
-    const diff = {};
-    diff[`- ${key}`] = plainObj.prevVal;
-    diff[`+ ${key}`] = plainObj.newVal;
-    return diff;
-  }
-
-  if (plainObj.prevVal !== undefined) {
-    const diff = {};
-    diff[`- ${key}`] = plainObj.prevVal;
-    return diff;
-  }
-
-  const diff = {};
-  diff[`+ ${key}`] = plainObj.newVal;
-  return diff;
+const differenceItem = (node, key) => {
+  const mapping = {
+    unchanged: (obj, propName) => _.fromPairs([[`  ${propName}`, obj.value]]),
+    changed: (obj, propName) => _.fromPairs([[`- ${propName}`, obj.valueBefore], [`+ ${propName}`, obj.valueAfter]]),
+    deleted: (obj, propName) => _.fromPairs([[`- ${propName}`, obj.value]]),
+    added: (obj, propName) => _.fromPairs([[`+ ${propName}`, obj.value]]),
+  };
+  return mapping[node.type](node, key);
 };
 
-const isPlainObj = obj => obj.lastNested;
+const isPlainNode = node => node.lastNested;
 
 const diffGenerator = (fileDifference) => {
   const correctObjKeys = (diff) => {
     const keys = Object.keys(diff);
 
     const result = keys.reduce((acc, key) => {
-      if (isPlainObj(diff[key])) {
+      if (isPlainNode(diff[key])) {
         return { ...acc, ...differenceItem(diff[key], key) };
       }
       const correctedKey = `  ${key}`;

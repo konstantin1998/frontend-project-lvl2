@@ -1,21 +1,5 @@
 import _ from 'lodash';
 
-const isObj = (arg) => {
-  if (typeof (arg) === 'string') {
-    return false;
-  }
-
-  if (Array.isArray(arg) === true) {
-    return false;
-  }
-
-  if (typeof (arg) === 'object') {
-    return true;
-  }
-
-  return false;
-};
-
 const getPropPath = (key, propPath) => {
   if (propPath === '') {
     return `${key}`;
@@ -24,7 +8,7 @@ const getPropPath = (key, propPath) => {
 };
 
 const getFormattedValue = (arg) => {
-  if (isObj(arg)) {
+  if (_.isPlainObject(arg)) {
     return '[complex value]';
   }
   if (typeof arg === 'string') {
@@ -33,41 +17,43 @@ const getFormattedValue = (arg) => {
   return arg;
 };
 
+const isPlainNode = node => node.lastNested;
+
 const diffGenerator = (fileDifference) => {
-  const objToLines = (obj, propPath = '') => {
-    const keys = Object.getOwnPropertyNames(obj);
+  const objToLines = (object, propPath = '') => {
+    const keys = Object.getOwnPropertyNames(object);
+    const mapping = {
+      unchanged: () => '',
+      changed: (obj, propName) => {
+        const message = `Property '${propName}' was updated. From ${getFormattedValue(obj.valueBefore)} to ${getFormattedValue(obj.valueAfter)}`;
+        return message;
+      },
+      deleted: (obj, propName) => {
+        const message = `Property '${propName}' was removed`;
+        return message;
+      },
+      added: (obj, propName) => {
+        const message = `Property '${propName}' was added with value: ${getFormattedValue(obj.value)}`;
+        return message;
+      },
+    };
 
     const result = keys.reduce((acc, key) => {
-      const objToAnalyze = obj[key];
+      const objToAnalyze = object[key];
 
-      if (objToAnalyze.lastNested) {
+      if (isPlainNode(objToAnalyze)) {
         const propName = getPropPath(key, propPath);
-
-        if ((objToAnalyze.prevVal !== undefined) && (objToAnalyze.newVal !== undefined)) {
-          if (_.isEqual(objToAnalyze.prevVal, objToAnalyze.newVal)) {
-            return acc;
-          }
-          const prevValue = getFormattedValue(objToAnalyze.prevVal);
-          const newValue = getFormattedValue(objToAnalyze.newVal);
-          return _.concat(acc, `Property '${propName}' was updated. From ${prevValue} to ${newValue}`);
-        }
-        if (objToAnalyze.prevVal === undefined) {
-          const newValue = getFormattedValue(objToAnalyze.newVal);
-          return _.concat(acc, `Property '${propName}' was added with value: ${newValue}`);
-        }
-        if (objToAnalyze.newVal === undefined) {
-          return _.concat(acc, `Property '${propName}' was removed`);
-        }
+        return _.concat(acc, mapping[objToAnalyze.type](objToAnalyze, propName));
       }
 
       const updatedPropPath = getPropPath(key, propPath);
-      return _.concat(acc, objToLines(obj[key], updatedPropPath));
+      return _.concat(acc, objToLines(object[key], updatedPropPath));
     }, []);
 
     return result;
   };
 
-  return objToLines(fileDifference).join('\n');
+  return _.compact(objToLines(fileDifference)).join('\n');
 };
 
 export default diffGenerator;

@@ -2,7 +2,7 @@ import fs from 'fs';
 import path from 'path';
 
 import getDifference from './getDifference';
-import makeDiff from './formatters';
+import renderDiff from './formatters';
 import parse from './parsers';
 
 const compare = (fileBeforePath, fileAfterPath, outputFormat) => {
@@ -16,7 +16,7 @@ const compare = (fileBeforePath, fileAfterPath, outputFormat) => {
   const objAfter = parse(fs.readFileSync(fileAfterPath).toString(), inputFileType);
 
   const fileDifference = getDifference(objBefore, objAfter);
-  return makeDiff(fileDifference, outputFormat);
+  return renderDiff(fileDifference, outputFormat);
 };
 
 export default compare;
