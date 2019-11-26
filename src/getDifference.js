@@ -1,31 +1,36 @@
 import _ from 'lodash';
 
-/* const differenceItem = (objBefore, objAfter, key) => {
-  const prevVal = objBefore[key];
-  const newVal = objAfter[key];
-  return _.fromPairs([[`${key}`, { prevVal, newVal, lastNested: true }]]);
-}; */
-const differenceItem = (objBefore, objAfter, key) => {
+const differenceItem = (objBefore, objAfter, key, path) => {
   if (_.has(objBefore, key) && _.has(objAfter, key)) {
     if (objBefore[key] === objAfter[key]) {
-      return _.fromPairs([[`${key}`, { type: 'unchanged', value: objBefore[key], lastNested: true }]]);
+      return {
+        path, type: 'unchanged', value: objBefore[key],
+      };
+      // _.fromPairs([[`${key}`, { type: 'unchanged', value: objBefore[key], lastNested: true }]]);
     }
     if (objBefore[key] !== objAfter[key]) {
-      return _.fromPairs([[`${key}`, {
-        type: 'changed', valueBefore: objBefore[key], valueAfter: objAfter[key], lastNested: true,
-      }]]);
+      return {
+        path,
+        type: 'changed',
+        valueBefore: objBefore[key],
+        valueAfter: objAfter[key],
+      };
     }
   }
 
   if (_.has(objBefore, key)) {
-    return _.fromPairs([[`${key}`, { type: 'deleted', value: objBefore[key], lastNested: true }]]);
+    return {
+      path, type: 'deleted', value: objBefore[key],
+    };
   }
-  return _.fromPairs([[`${key}`, { type: 'added', value: objAfter[key], lastNested: true }]]);
+  return {
+    path, type: 'added', value: objAfter[key],
+  };
 };
 
-const isPlainKey = (obj1, obj2, key) => {
-  if (_.has(obj1, key) && _.has(obj2, key)) {
-    if (_.isPlainObject(obj1[key]) && _.isPlainObject(obj2[key])) {
+const isPlainNode = (obj1, obj2, node) => {
+  if (_.has(obj1, node) && _.has(obj2, node)) {
+    if (_.isPlainObject(obj1[node]) && _.isPlainObject(obj2[node])) {
       return false;
     }
   }
@@ -33,17 +38,19 @@ const isPlainKey = (obj1, obj2, key) => {
 };
 
 const getDifference = (objBefore, objAfter) => {
-  const formDiff = (before, after) => {
+  const formDiff = (before, after, path = '') => {
     const keys = _.union(_.keys(before), _.keys(after));
 
     const resultObj = keys.reduce((acc, key) => {
-      if (isPlainKey(before, after, key)) {
-        return { ...acc, ...differenceItem(before, after, key) };
+      const updatedPath = (path === '') ? `${key}` : `${path}.${key}`;
+      if (isPlainNode(before, after, key)) {
+        return _.concat(acc, differenceItem(before, after, key, updatedPath));
+        // { ...acc, ...differenceItem(before, after, key, updatedPath) };
       }
 
-
-      return { ...acc, ..._.fromPairs([[`${key}`, formDiff(before[key], after[key])]]) };
-    }, {});
+      return _.concat(acc, formDiff(before[key], after[key], updatedPath));
+      // { ...acc, ..._.fromPairs([[`${key}`, formDiff(before[key], after[key])]]) };
+    }, []);
 
     return resultObj;
   };

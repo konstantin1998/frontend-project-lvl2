@@ -27,34 +27,45 @@ const objToString = (object) => {
   return _.join(_.concat('{', objToLines(object), '}'), '\n');
 };
 
-const differenceItem = (node, key) => {
+const getUpdatedPath = (path, type) => {
   const mapping = {
-    unchanged: (obj, propName) => _.fromPairs([[`  ${propName}`, obj.value]]),
-    changed: (obj, propName) => _.fromPairs([[`- ${propName}`, obj.valueBefore], [`+ ${propName}`, obj.valueAfter]]),
-    deleted: (obj, propName) => _.fromPairs([[`- ${propName}`, obj.value]]),
-    added: (obj, propName) => _.fromPairs([[`+ ${propName}`, obj.value]]),
+    unchanged: key => `  ${key}`,
+    deleted: key => `- ${key}`,
+    added: key => `+ ${key}`,
   };
-  return mapping[node.type](node, key);
+  const keys = path.split('.');
+  const key = _.last(keys);
+  const keysWithoutLast = keys.slice(0, keys.length - 1);
+  const newKey = mapping[type](key);
+  const updatedKeys = _.concat(keysWithoutLast.map(item => `  ${item}`), newKey);
+  const updatedPath = updatedKeys.join('.');
+  return updatedPath;
 };
 
-const isPlainNode = node => node.lastNested;
-
 const diffGenerator = (fileDifference) => {
-  const correctObjKeys = (diff) => {
-    const keys = Object.keys(diff);
+  const updatedFileDifference = fileDifference.map((item) => {
+    if (item.type !== 'changed') {
+      return { path: getUpdatedPath(item.path, item.type), value: item.value };
+    }
 
-    const result = keys.reduce((acc, key) => {
-      if (isPlainNode(diff[key])) {
-        return { ...acc, ...differenceItem(diff[key], key) };
-      }
-      const correctedKey = `  ${key}`;
-      acc[correctedKey] = correctObjKeys(diff[key]);
-      return acc;
-    }, {});
-    return result;
-  };
+    const keys = item.path.split('.');
+    const key = _.last(keys);
+    const keysWithoutLast = keys.slice(0, keys.length - 1);
+    const keyBefore = `- ${key}`;
+    const keyAfter = `+ ${key}`;
+    const updatedKeysBefore = _.concat(keysWithoutLast.map(keyName => `  ${keyName}`), keyBefore);
+    const updatedKeysAfter = _.concat(keysWithoutLast.map(keyName => `  ${keyName}`), keyAfter);
+    const updatedPathBefore = updatedKeysBefore.join('.');
+    const updatedPathAfter = updatedKeysAfter.join('.');
 
-  const diffObj = correctObjKeys(fileDifference);
+    return [
+      { path: updatedPathBefore, value: item.valueBefore },
+      { path: updatedPathAfter, value: item.valueAfter },
+    ];
+  });
+
+  const diffObj = _.flatten(updatedFileDifference)
+    .reduce((acc, item) => _.set(acc, item.path, item.value), {});
   return objToString(diffObj);
 };
 
