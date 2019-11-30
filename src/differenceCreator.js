@@ -38,24 +38,22 @@ const isPlainNode = (obj1, obj2, node) => {
 };
 
 const getDifference = (objBefore, objAfter) => {
-  const formDiff = (before, after, path = '') => {
+  const formDiff = (before, after, path = []) => {
     const keys = _.union(_.keys(before), _.keys(after));
 
-    const resultObj = keys.reduce((acc, key) => {
-      const updatedPath = (path === '') ? `${key}` : `${path}.${key}`;
+    const resultObj = keys.map((key) => {
+      const updatedPath = _.concat(path, `${key}`);
       if (isPlainNode(before, after, key)) {
-        return _.concat(acc, differenceItem(before, after, key, updatedPath));
-        // { ...acc, ...differenceItem(before, after, key, updatedPath) };
+        return differenceItem(before, after, key, updatedPath);
       }
 
-      return _.concat(acc, formDiff(before[key], after[key], updatedPath));
-      // { ...acc, ..._.fromPairs([[`${key}`, formDiff(before[key], after[key])]]) };
-    }, []);
+      return formDiff(before[key], after[key], updatedPath);
+    });
 
     return resultObj;
   };
 
-  return formDiff(objBefore, objAfter);
+  return _.flattenDeep(formDiff(objBefore, objAfter));
 };
 
 export default getDifference;

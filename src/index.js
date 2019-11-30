@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 
-import getDifference from './getDifference';
+import getDifference from './differenceCreator';
 import renderDiff from './formatters';
 import parse from './parsers';
 

@@ -28,31 +28,29 @@ const objToString = (object) => {
 };
 
 const getUpdatedPath = (path, type) => {
-  const mapping = {
+  const nameMapping = {
     unchanged: key => `  ${key}`,
     deleted: key => `- ${key}`,
     added: key => `+ ${key}`,
   };
-  const keys = path.split('.');
-  const key = _.last(keys);
-  const keysWithoutLast = keys.slice(0, keys.length - 1);
-  const newKey = mapping[type](key);
+
+  const key = _.last(path);
+  const keysWithoutLast = path.slice(0, path.length - 1);
+  const newKey = nameMapping[type](key);
   const updatedKeys = _.concat(keysWithoutLast.map(item => `  ${item}`), newKey);
   const updatedPath = updatedKeys.join('.');
   return updatedPath;
 };
 
-const diffGenerator = (fileDifference) => {
-  const updatedFileDifference = fileDifference.map((item) => {
-    if (item.type !== 'changed') {
-      return { path: getUpdatedPath(item.path, item.type), value: item.value };
-    }
-
-    const keys = item.path.split('.');
-    const key = _.last(keys);
-    const keysWithoutLast = keys.slice(0, keys.length - 1);
-    const keyBefore = `- ${key}`;
-    const keyAfter = `+ ${key}`;
+const mapping = {
+  unchanged: item => ({ path: getUpdatedPath(item.path, item.type), value: item.value }),
+  deleted: item => ({ path: getUpdatedPath(item.path, item.type), value: item.value }),
+  added: item => ({ path: getUpdatedPath(item.path, item.type), value: item.value }),
+  changed: (item) => {
+    const lastKey = _.last(item.path);
+    const keysWithoutLast = item.path.slice(0, item.path.length - 1);
+    const keyBefore = `- ${lastKey}`;
+    const keyAfter = `+ ${lastKey}`;
     const updatedKeysBefore = _.concat(keysWithoutLast.map(keyName => `  ${keyName}`), keyBefore);
     const updatedKeysAfter = _.concat(keysWithoutLast.map(keyName => `  ${keyName}`), keyAfter);
     const updatedPathBefore = updatedKeysBefore.join('.');
@@ -62,9 +60,11 @@ const diffGenerator = (fileDifference) => {
       { path: updatedPathBefore, value: item.valueBefore },
       { path: updatedPathAfter, value: item.valueAfter },
     ];
-  });
+  },
+};
 
-  const diffObj = _.flatten(updatedFileDifference)
+const diffGenerator = (fileDifference) => {
+  const diffObj = _.flatten(fileDifference.map(item => mapping[item.type](item)))
     .reduce((acc, item) => _.set(acc, item.path, item.value), {});
   return objToString(diffObj);
 };

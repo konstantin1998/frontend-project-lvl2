@@ -14,15 +14,15 @@ const diffGenerator = (fileDifference) => {
   const mapping = {
     unchanged: () => '',
     changed: (item) => {
-      const message = `Property '${item.path}' was updated. From ${getFormattedValue(item.valueBefore)} to ${getFormattedValue(item.valueAfter)}`;
+      const message = `Property '${item.path.join('.')}' was updated. From ${getFormattedValue(item.valueBefore)} to ${getFormattedValue(item.valueAfter)}`;
       return message;
     },
     deleted: (item) => {
-      const message = `Property '${item.path}' was removed`;
+      const message = `Property '${item.path.join('.')}' was removed`;
       return message;
     },
     added: (item) => {
-      const message = `Property '${item.path}' was added with value: ${getFormattedValue(item.value)}`;
+      const message = `Property '${item.path.join('.')}' was added with value: ${getFormattedValue(item.value)}`;
       return message;
     },
   };
