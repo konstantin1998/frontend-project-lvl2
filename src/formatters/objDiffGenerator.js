@@ -43,10 +43,11 @@ const getUpdatedPath = (path, type) => {
 };
 
 const mapping = {
-  unchanged: item => ({ path: getUpdatedPath(item.path, item.type), value: item.value }),
-  deleted: item => ({ path: getUpdatedPath(item.path, item.type), value: item.value }),
-  added: item => ({ path: getUpdatedPath(item.path, item.type), value: item.value }),
-  changed: (item) => {
+  unchanged: (acc, item) => _.set(acc, getUpdatedPath(item.path, item.type), item.value),
+  // ({ path: getUpdatedPath(item.path, item.type), value: item.value }),
+  deleted: (acc, item) => _.set(acc, getUpdatedPath(item.path, item.type), item.value),
+  added: (acc, item) => _.set(acc, getUpdatedPath(item.path, item.type), item.value),
+  changed: (acc, item) => {
     const lastKey = _.last(item.path);
     const keysWithoutLast = item.path.slice(0, item.path.length - 1);
     const keyBefore = `- ${lastKey}`;
@@ -56,16 +57,21 @@ const mapping = {
     const updatedPathBefore = updatedKeysBefore.join('.');
     const updatedPathAfter = updatedKeysAfter.join('.');
 
-    return [
-      { path: updatedPathBefore, value: item.valueBefore },
-      { path: updatedPathAfter, value: item.valueAfter },
-    ];
+    return _.set(
+      _.set(acc, updatedPathBefore, item.valueBefore), updatedPathAfter, item.valueAfter,
+    );
   },
 };
 
+const passThroughTree = (acc, item) => {
+  if (_.isArray(item)) {
+    return item.reduce(passThroughTree, acc);
+  }
+  return mapping[item.type](acc, item);
+};
+
 const diffGenerator = (fileDifference) => {
-  const diffObj = _.flatten(fileDifference.map(item => mapping[item.type](item)))
-    .reduce((acc, item) => _.set(acc, item.path, item.value), {});
+  const diffObj = fileDifference.reduce(passThroughTree, {});
   return objToString(diffObj);
 };
 

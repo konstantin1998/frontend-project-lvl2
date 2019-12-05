@@ -11,8 +11,13 @@ const mapping = {
   added: item => ({ type: item.type, value: item.value }),
 };
 
-const diffGenerator = fileDifference => JSON.stringify(
-  fileDifference.reduce((acc, item) => _.set(acc, item.path.join('.'), mapping[item.type](item)), {}),
-);
+const passThroughTree = (acc, item) => {
+  if (_.isArray(item)) {
+    return item.reduce(passThroughTree, acc);
+  }
+  return _.set(acc, item.path.join('.'), mapping[item.type](item));
+};
+
+const diffGenerator = fileDifference => JSON.stringify(fileDifference.reduce(passThroughTree, {}));
 
 export default diffGenerator;

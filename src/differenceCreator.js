@@ -53,7 +53,7 @@ const getDifference = (objBefore, objAfter) => {
     return resultObj;
   };
 
-  return _.flattenDeep(formDiff(objBefore, objAfter));
+  return formDiff(objBefore, objAfter);
 };
 
 export default getDifference;

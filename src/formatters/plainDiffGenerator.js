@@ -26,8 +26,16 @@ const diffGenerator = (fileDifference) => {
       return message;
     },
   };
-  const diff = fileDifference.map(item => mapping[item.type](item));
-  return _.compact(diff).join('\n');
+
+  const passThroughTree = (item) => {
+    if (_.isArray(item)) {
+      return item.map(passThroughTree);
+    }
+    return mapping[item.type](item);
+  };
+
+  // const diff = fileDifference.map(passThroughTree);
+  return _.compact(_.flattenDeep(fileDifference.map(passThroughTree))).join('\n');
 };
 
 export default diffGenerator;
