@@ -1,16 +1,18 @@
 import _ from 'lodash';
 
-const differenceItem = (objBefore, objAfter, key, path) => {
+const differenceItem = (objBefore, objAfter, key) => {
   if (_.has(objBefore, key) && _.has(objAfter, key)) {
     if (objBefore[key] === objAfter[key]) {
       return {
-        path, type: 'unchanged', value: objBefore[key],
+        name: `${key}`,
+        type: 'unchanged',
+        value: objBefore[key],
       };
       // _.fromPairs([[`${key}`, { type: 'unchanged', value: objBefore[key], lastNested: true }]]);
     }
     if (objBefore[key] !== objAfter[key]) {
       return {
-        path,
+        name: `${key}`,
         type: 'changed',
         valueBefore: objBefore[key],
         valueAfter: objAfter[key],
@@ -20,11 +22,15 @@ const differenceItem = (objBefore, objAfter, key, path) => {
 
   if (_.has(objBefore, key)) {
     return {
-      path, type: 'deleted', value: objBefore[key],
+      name: `${key}`,
+      type: 'deleted',
+      value: objBefore[key],
     };
   }
   return {
-    path, type: 'added', value: objAfter[key],
+    name: `${key}`,
+    type: 'added',
+    value: objAfter[key],
   };
 };
 
@@ -38,19 +44,18 @@ const isPlainNode = (obj1, obj2, node) => {
 };
 
 const getDifference = (objBefore, objAfter) => {
-  const formDiff = (before, after, path = []) => {
+  const formDiff = (before, after) => {
     const keys = _.union(_.keys(before), _.keys(after));
 
-    const resultObj = keys.map((key) => {
-      const updatedPath = _.concat(path, `${key}`);
+    const resultArray = keys.map((key) => {
       if (isPlainNode(before, after, key)) {
-        return differenceItem(before, after, key, updatedPath);
+        return differenceItem(before, after, key);
       }
 
-      return formDiff(before[key], after[key], updatedPath);
+      return { name: `${key}`, children: formDiff(before[key], after[key]) };// formDiff(before[key], after[key], updatedPath);
     });
 
-    return resultObj;
+    return resultArray;
   };
 
   return formDiff(objBefore, objAfter);
