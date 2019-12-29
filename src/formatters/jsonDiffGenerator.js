@@ -1,21 +1,23 @@
-import _ from 'lodash';
+// import _ from 'lodash';
 
 const mapping = {
-  unchanged: item => ({ type: item.type, value: item.value }),
+  unchanged: item => ({ [item.name]: { type: item.type, value: item.value } }),
   changed: item => ({
-    type: item.type,
-    valueBefore: item.valueBefore,
-    valueAfter: item.valueAfter,
+    [item.name]: {
+      type: item.type,
+      valueBefore: item.valueBefore,
+      valueAfter: item.valueAfter,
+    },
   }),
-  deleted: item => ({ type: item.type, value: item.value }),
-  added: item => ({ type: item.type, value: item.value }),
+  deleted: item => ({ [item.name]: { type: item.type, value: item.value } }),
+  added: item => ({ [item.name]: { type: item.type, value: item.value } }),
 };
 
 const passThroughTree = (acc, item) => {
-  if (_.isArray(item)) {
-    return item.reduce(passThroughTree, acc);
+  if (item.children !== undefined) {
+    return { ...acc, ...{ [item.name]: item.children.reduce(passThroughTree, {}) } };
   }
-  return _.set(acc, item.path.join('.'), mapping[item.type](item));
+  return { ...acc, ...mapping[item.type](item) };
 };
 
 const diffGenerator = fileDifference => JSON.stringify(fileDifference.reduce(passThroughTree, {}));

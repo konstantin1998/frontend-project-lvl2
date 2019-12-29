@@ -27,7 +27,7 @@ const objToString = (object) => {
   return _.join(_.concat('{', objToLines(object), '}'), '\n');
 };
 
-const getUpdatedPath = (path, type) => {
+/* const getUpdatedPath = (path, type) => {
   const nameMapping = {
     unchanged: key => `  ${key}`,
     deleted: key => `- ${key}`,
@@ -61,13 +61,33 @@ const mapping = {
       _.set(acc, updatedPathBefore, item.valueBefore), updatedPathAfter, item.valueAfter,
     );
   },
+}; */
+const mapping = {
+  unchanged: (item) => {
+    const updatedName = `  ${item.name}`;
+    return { [updatedName]: item.value };
+  },
+  deleted: (item) => {
+    const updatedName = `- ${item.name}`;
+    return { [updatedName]: item.value };
+  },
+  added: (item) => {
+    const updatedName = `+ ${item.name}`;
+    return { [updatedName]: item.value };
+  },
+  changed: (item) => {
+    const updatedNameBefore = `- ${item.name}`;
+    const updatedNameAfter = `+ ${item.name}`;
+    return { [updatedNameBefore]: item.valueBefore, [updatedNameAfter]: item.valueAfter };
+  },
 };
 
 const passThroughTree = (acc, item) => {
-  if (_.isArray(item)) {
-    return item.reduce(passThroughTree, acc);
+  if (item.children !== undefined) {
+    const newName = `  ${item.name}`;
+    return { ...acc, ...{ [newName]: item.children.reduce(passThroughTree, {}) } };
   }
-  return mapping[item.type](acc, item);
+  return { ...acc, ...mapping[item.type](item) };
 };
 
 const diffGenerator = (fileDifference) => {

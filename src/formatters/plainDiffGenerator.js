@@ -12,30 +12,44 @@ const getFormattedValue = (arg) => {
 
 const diffGenerator = (fileDifference) => {
   const mapping = {
-    unchanged: () => '',
-    changed: (item) => {
-      const message = `Property '${item.path.join('.')}' was updated. From ${getFormattedValue(item.valueBefore)} to ${getFormattedValue(item.valueAfter)}`;
+    unchanged: () => null,
+    changed: (item, path) => {
+      const message = `Property '${path.join('.')}' was updated. From ${getFormattedValue(item.valueBefore)} to ${getFormattedValue(item.valueAfter)}`;
       return message;
     },
-    deleted: (item) => {
-      const message = `Property '${item.path.join('.')}' was removed`;
+    deleted: (item, path) => {
+      const message = `Property '${path.join('.')}' was removed`;
       return message;
     },
-    added: (item) => {
-      const message = `Property '${item.path.join('.')}' was added with value: ${getFormattedValue(item.value)}`;
+    added: (item, path) => {
+      const message = `Property '${path.join('.')}' was added with value: ${getFormattedValue(item.value)}`;
       return message;
     },
   };
 
-  const passThroughTree = (item) => {
-    if (_.isArray(item)) {
-      return item.map(passThroughTree);
+  /* const passThroughTree = (acc, item, path) => {
+    const messages = acc;
+    const updatedPath = _.concat(path, item.name);
+    if (item.children !== undefined) {
+      return item.children.reduce(passThroughTree, [messages, updatedPath]);
     }
-    return mapping[item.type](item);
+    const message = mapping[item.type](item, updatedPath);
+    return [_.concat(messages, message), path];
+  }; */
+  const passThroughTree = (arr, acc, path) => {
+    const messages = arr.filter(item => (item.children === undefined)).map((item) => {
+      const newPath = [...path, item.name];// _.concat(path, item.name);
+      return mapping[item.type](item, newPath);
+    });
+
+    const newAcc = [...acc, ...messages]; // _.concat(acc, messages);
+    return arr.filter(item => (item.children !== undefined)).reduce((accum, item) => {
+      const newPath = [...path, item.name];// _.concat(path, item.name);
+      return passThroughTree(item.children, accum, newPath);
+    }, newAcc);
   };
 
-  // const diff = fileDifference.map(passThroughTree);
-  return _.compact(_.flattenDeep(fileDifference.map(passThroughTree))).join('\n');
+  return _.compact(passThroughTree(fileDifference, [], [])).join('\n');
 };
 
 export default diffGenerator;
