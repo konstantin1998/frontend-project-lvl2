@@ -4,7 +4,7 @@ const differenceItem = (objBefore, objAfter, key) => {
   if (_.has(objBefore, key) && _.has(objAfter, key)) {
     if (objBefore[key] === objAfter[key]) {
       return {
-        name: `${key}`,
+        name: key,
         type: 'unchanged',
         value: objBefore[key],
       };
@@ -12,7 +12,7 @@ const differenceItem = (objBefore, objAfter, key) => {
     }
     if (objBefore[key] !== objAfter[key]) {
       return {
-        name: `${key}`,
+        name: key,
         type: 'changed',
         valueBefore: objBefore[key],
         valueAfter: objAfter[key],
@@ -22,13 +22,13 @@ const differenceItem = (objBefore, objAfter, key) => {
 
   if (_.has(objBefore, key)) {
     return {
-      name: `${key}`,
+      name: key,
       type: 'deleted',
       value: objBefore[key],
     };
   }
   return {
-    name: `${key}`,
+    name: key,
     type: 'added',
     value: objAfter[key],
   };
