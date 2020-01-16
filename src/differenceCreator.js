@@ -47,15 +47,13 @@ const getDifference = (objBefore, objAfter) => {
   const formDiff = (before, after) => {
     const keys = _.union(_.keys(before), _.keys(after));
 
-    const resultArray = keys.map((key) => {
+    return keys.map((key) => {
       if (isPlainNode(before, after, key)) {
         return differenceItem(before, after, key);
       }
 
-      return { name: `${key}`, children: formDiff(before[key], after[key]) };// formDiff(before[key], after[key], updatedPath);
+      return { name: key, children: formDiff(before[key], after[key]) };
     });
-
-    return resultArray;
   };
 
   return formDiff(objBefore, objAfter);
