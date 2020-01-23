@@ -1,4 +1,2 @@
 
-const diffGenerator = JSON.stringify;
-
-export default diffGenerator;
+export default JSON.stringify;

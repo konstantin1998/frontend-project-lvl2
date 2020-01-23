@@ -1,86 +1,58 @@
-import _ from 'lodash';
+/* const hasChild = (item) => {
+  if (item.children !== undefined) {
+    return true;
+  }
 
-const objToString = (object) => {
-  const createGap = (key) => {
-    const keyString = `${key}`;
-    if ((keyString[0] === '+') || (keyString[0] === '-')) {
-      return '      ';
-    }
-    return '    ';
-  };
-
-  const objToLines = (obj, gap = '  ') => {
-    const keys = Object.getOwnPropertyNames(obj);
-
-    const result = keys.reduce((acc, key) => {
-      const insideObjGap = createGap(key);
-      if (_.isPlainObject(obj[key])) {
-        const newGap = `${gap}${insideObjGap}`;
-        return _.concat(acc, `${gap}${key}: {`, objToLines(obj[key], newGap), `${gap}  }`);
-      }
-      return _.concat(acc, `${gap}${key}: ${obj[key]}`);
-    }, []);
-
-    return result;
-  };
-
-  return _.join(_.concat('{', objToLines(object), '}'), '\n');
-};
-
-/* const mapping = {
-  unchanged: (item) => {
-    const updatedName = `  ${item.name}`;
-    return { [updatedName]: item.value };
-  },
-  deleted: (item) => {
-    const updatedName = `- ${item.name}`;
-    return { [updatedName]: item.value };
-  },
-  added: (item) => {
-    const updatedName = `+ ${item.name}`;
-    return { [updatedName]: item.value };
-  },
-  changed: (item) => {
-    const updatedNameBefore = `- ${item.name}`;
-    const updatedNameAfter = `+ ${item.name}`;
-    return { [updatedNameBefore]: item.valueBefore, [updatedNameAfter]: item.valueAfter };
-  },
+  return false;
 }; */
 
-const passThroughTree = (acc, item) => {
-  if (item.children !== undefined) {
-    const newName = `  ${item.name}`;
-    return { ...acc, ...{ [newName]: item.children.reduce(passThroughTree, {}) } };
+/* const itemToStrings = (item, gap) => {
+  if (item.type === 'changed') {
+    return [`${gap}- ${item.name}: ${item.valueBefore}`,
+    `${gap}+ ${item.name}: ${item.valueAfter}`];
   }
-  switch (item.type) {
-    case 'unchanged': {
-      const updatedName = `  ${item.name}`;
-      return { ...acc, ...{ [updatedName]: item.value } };
-    }
-    case 'deleted': {
-      const updatedName = `- ${item.name}`;
-      return { ...acc, ...{ [updatedName]: item.value } };
-    }
-
-    case 'added': {
-      const updatedName = `+ ${item.name}`;
-      return { ...acc, ...{ [updatedName]: item.value } };
-    }
-
-    default: {
-      const updatedNameBefore = `- ${item.name}`;
-      const updatedNameAfter = `+ ${item.name}`;
-      return {
-        ...acc,
-        ...{ [updatedNameBefore]: item.valueBefore, [updatedNameAfter]: item.valueAfter },
-      };
-    }
+  if (item.type === 'added') {
+    return [`${gap}+ ${item.name}: ${item.value}`];
   }
-};
+  if (item.type === 'deleted') {
+    return [`${gap}- ${item.name}: ${item.value}`];
+  }
+  return [`${gap}  ${item.name}: ${item.value}`];
+}; */
 
 const diffGenerator = (fileDifference) => {
-  const diffObj = fileDifference.reduce(passThroughTree, {});
-  return objToString(diffObj);
+  const passThroughTree = (accum, item) => {
+    const [acc, gap] = accum;
+    if (item.type === 'changed') {
+      const newAcc = acc.concat([`${gap}- ${item.name}: ${item.valueBefore}`, `${gap}+ ${item.name}: ${item.valueAfter}`]);
+      return [newAcc, gap];
+    }
+    if (item.type === 'added') {
+      const newAcc = acc.concat(`${gap}+ ${item.name}: ${item.value}`);
+      return [newAcc, gap];
+    }
+    if (item.type === 'deleted') {
+      const newAcc = acc.concat(`${gap}- ${item.name}: ${item.value}`);
+      return [newAcc, gap];
+    }
+    if (item.type === 'unchanged') {
+      const newAcc = acc.concat(`${gap}  ${item.name}: ${item.value}`);
+      return [newAcc, gap];
+    }
+
+    const child = item.children;
+    const newAcc = acc.concat(`${gap}  ${item.name}: {`, child.reduce(passThroughTree, [[], `${gap}    `])[0], `${gap}  }`);
+    return [newAcc, gap];
+    /* if (hasChild(item)) {
+      const child = item.children;
+      const newAcc = acc.concat(`${gap}  ${item.name}: {`, child.reduce(passThroughTree,
+        [[], `${gap}    `])[0], `${gap}  }`);
+      return [newAcc, gap];
+    }
+    const newAcc = acc.concat(itemToStrings(item, gap));
+    return [newAcc, gap]; */
+  };
+  return ['{'].concat(fileDifference.reduce(passThroughTree, [[], '  '])[0], '}').join('\n');
 };
 
 export default diffGenerator;
