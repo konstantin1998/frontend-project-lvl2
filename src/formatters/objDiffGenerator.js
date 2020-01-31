@@ -1,34 +1,29 @@
-const diffGenerator = (fileDifference, startLine, finishLine, gap) => {
-  /* const passThroughTree = (accum, item) => {
-    const [acc, gap] = accum;
+const generateDiff = (fileDifference, startLine = '{', finishLine = '}', gap = '  ') => {
+  const passThroughTree = (item) => {
     switch (item.type) {
       case 'changed': {
-        const newAcc = acc.concat([`${gap}- ${item.name}: ${item.valueBefore}`, `${gap}+ ${item.name}: ${item.valueAfter}`]);
-        return [newAcc, gap];
+        return [`${gap}- ${item.name}: ${item.valueBefore}`, `${gap}+ ${item.name}: ${item.valueAfter}`].join('\n');
       }
       case 'added': {
-        const newAcc = acc.concat(`${gap}+ ${item.name}: ${item.value}`);
-        return [newAcc, gap];
+        return `${gap}+ ${item.name}: ${item.value}`;
       }
       case 'deleted': {
-        const newAcc = acc.concat(`${gap}- ${item.name}: ${item.value}`);
-        return [newAcc, gap];
+        return `${gap}- ${item.name}: ${item.value}`;
       }
       case 'unchanged': {
-        const newAcc = acc.concat(`${gap}  ${item.name}: ${item.value}`);
-        return [newAcc, gap];
+        return `${gap}  ${item.name}: ${item.value}`;
       }
       case 'parent': {
-        const { children } = item;
-        const newAcc = acc.concat(`${gap}  ${item.name}: {`, children.reduce(passThroughTree, [[], `${gap}    `])[0], `${gap}  }`);
-        return [newAcc, gap];
+        const newStartLine = `${gap}  ${item.name}: {`;
+        const newFinishLine = `${gap}  }`;
+        const newGap = `${gap}    `;
+        return generateDiff(item.children, newStartLine, newFinishLine, newGap);
       }
       default:
         throw new Error('error');
     }
   };
-  return ['{'].concat(fileDifference.reduce(passThroughTree, [[], '  '])[0], '}').join('\n'); */
-  const passThroughTree = ()
+  return [startLine, ...fileDifference.map(passThroughTree), finishLine].join('\n');
 };
 
-export default diffGenerator;
+export default generateDiff;
