@@ -8,7 +8,6 @@ const differenceItem = (objBefore, objAfter, key) => {
         type: 'unchanged',
         value: objBefore[key],
       };
-      // _.fromPairs([[`${key}`, { type: 'unchanged', value: objBefore[key], lastNested: true }]]);
     }
     if (objBefore[key] !== objAfter[key]) {
       return {
@@ -52,7 +51,7 @@ const getDifference = (objBefore, objAfter) => {
         return differenceItem(before, after, key);
       }
 
-      return { name: key, children: formDiff(before[key], after[key]) };
+      return { name: key, children: formDiff(before[key], after[key]), type: 'parent' };
     });
   };
 
