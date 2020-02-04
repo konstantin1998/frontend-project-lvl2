@@ -30,7 +30,7 @@ const iter = (fileDifference, path = []) => {
         return iter(item.children, newPath);
       }
       default:
-        throw new Error('exeption in  function iter from objDiffGenerator.js');
+        throw new Error('exeption in  function iter from plainDiffGenerator.js');
     }
   };
 
