@@ -10,7 +10,7 @@ const getFormattedValue = (arg) => {
   return arg;
 };
 
-const generateDiff = (fileDifference, path = []) => {
+const iter = (fileDifference, path = []) => {
   const passThrowTree = (item) => {
     const newPath = path.concat(item.name);
     switch (item.type) {
@@ -27,14 +27,16 @@ const generateDiff = (fileDifference, path = []) => {
         return null;
       }
       case 'parent': {
-        return generateDiff(item.children, newPath);
+        return iter(item.children, newPath);
       }
       default:
-        throw new Error('error');
+        throw new Error('exeption in  function iter from objDiffGenerator.js');
     }
   };
 
   return fileDifference.map(passThrowTree).filter(item => !(item === null)).join('\n');
 };
+
+const generateDiff = fileDifference => iter(fileDifference);
 
 export default generateDiff;

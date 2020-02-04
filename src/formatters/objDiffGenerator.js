@@ -1,4 +1,5 @@
-const generateDiff = (fileDifference, startLine = '{', finishLine = '}', gap = '  ') => {
+const iter = (fileDifference, level = 0) => {
+  const gap = '  '.repeat(2 * level + 1);
   const passThroughTree = (item) => {
     switch (item.type) {
       case 'changed': {
@@ -14,16 +15,20 @@ const generateDiff = (fileDifference, startLine = '{', finishLine = '}', gap = '
         return `${gap}  ${item.name}: ${item.value}`;
       }
       case 'parent': {
-        const newStartLine = `${gap}  ${item.name}: {`;
-        const newFinishLine = `${gap}  }`;
-        const newGap = `${gap}    `;
-        return generateDiff(item.children, newStartLine, newFinishLine, newGap);
+        const startLine = `${gap}  ${item.name}: {`;
+        const finishLine = `${gap}  }`;
+        return [startLine, iter(item.children, level + 1), finishLine].join('\n');
       }
       default:
-        throw new Error('error');
+        throw new Error('exeption in  function iter from objDiffGenerator.js');
     }
   };
-  return [startLine, ...fileDifference.map(passThroughTree), finishLine].join('\n');
+  if (level === 0) {
+    return ['{', ...fileDifference.map(passThroughTree), '}'].join('\n');
+  }
+  return fileDifference.map(passThroughTree).join('\n');
 };
+
+const generateDiff = fileDifference => iter(fileDifference);
 
 export default generateDiff;
