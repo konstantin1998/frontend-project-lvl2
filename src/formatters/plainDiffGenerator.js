@@ -10,7 +10,7 @@ const getFormattedValue = (arg) => {
   return arg;
 };
 
-const iter = (fileDifference, path = []) => {
+const iter = (diffTree, path = []) => {
   const passThrowTree = (item) => {
     const newPath = path.concat(item.name);
     switch (item.type) {
@@ -30,13 +30,13 @@ const iter = (fileDifference, path = []) => {
         return iter(item.children, newPath);
       }
       default:
-        throw new Error('exeption in  function iter from plainDiffGenerator.js');
+        throw new Error(`error: unexpected type ${item.type}`);
     }
   };
 
-  return fileDifference.map(passThrowTree).filter(item => !(item === null)).join('\n');
+  return diffTree.map(passThrowTree).filter(item => !(item === null)).join('\n');
 };
 
-const generateDiff = fileDifference => iter(fileDifference);
+const renderDiff = diffTree => iter(diffTree);
 
-export default generateDiff;
+export default renderDiff;

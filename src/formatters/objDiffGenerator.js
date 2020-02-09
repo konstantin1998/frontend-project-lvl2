@@ -1,4 +1,4 @@
-const iter = (fileDifference, level = 0) => {
+const iter = (diffTree, level = 0) => {
   const gap = '  '.repeat(2 * level + 1);
   const passThroughTree = (item) => {
     switch (item.type) {
@@ -20,15 +20,15 @@ const iter = (fileDifference, level = 0) => {
         return [startLine, iter(item.children, level + 1), finishLine].join('\n');
       }
       default:
-        throw new Error('exeption in  function iter from objDiffGenerator.js');
+        throw new Error(`error: unexpected type ${item.type}`);
     }
   };
   if (level === 0) {
-    return ['{', ...fileDifference.map(passThroughTree), '}'].join('\n');
+    return ['{', ...diffTree.map(passThroughTree), '}'].join('\n');
   }
-  return fileDifference.map(passThroughTree).join('\n');
+  return diffTree.map(passThroughTree).join('\n');
 };
 
-const generateDiff = fileDifference => iter(fileDifference);
+const renderDiff = diffTree => iter(diffTree);
 
-export default generateDiff;
+export default renderDiff;
